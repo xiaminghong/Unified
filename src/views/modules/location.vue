@@ -14,9 +14,11 @@
 			default-expand-all
 			node-key="id"
 			ref="tree"
-			highlight-current
 			accordion
-			:props="defaultProps">
+			:props="defaultProps"
+			@node-click='nodeClick'
+			@check='check'
+			@current-change='currentChange'>
 		</el-tree>
 			
 			</div>
@@ -52,8 +54,15 @@
 				</el-row>
 			</div>
 			<div class="container-content">
+				<div class="enclosure">
+						<div class="myMap">我的地图</div>
+						<div class="myMap" @click="isShowColumn">电子围栏</div>
+					</div>
+					<!-- 是否显示电子围栏 -->
+				<div class="isShow" v-show='false'></div>
 				<!-- 主地图 -->
-				<div id="container-map"></div>
+				<div id="container-map">
+				</div>
 			</div>
 			<div class="container-footer">
 				<div class="Monitor-from">
@@ -69,7 +78,7 @@
 							<el-table
 							:data="tableDataFirst"
 							border
-							style="width: 100%">
+							style="height:190px width:100%">
 							<el-table-column
 								prop="vehicle"
 								label="车牌号"
@@ -122,7 +131,7 @@
 							<el-table
 							:data="tableDataSecond"
 							border
-							style="width: 100%">
+							style="height:190px width:100%">
 							<el-table-column
 								prop="vehicle"
 								label="操作"
@@ -180,7 +189,7 @@
 							<el-table
 							:data="tableDataThird"
 							border
-							style="width: 100%">
+							style="height:190px width:100%">
 							<el-table-column
 								prop="vehicle"
 								label="操作"
@@ -250,6 +259,8 @@
 <script>
 export default {
   created () {
+    this.map = null
+    this.locationMarker = null
   },
   mounted () {
     this.getMap()
@@ -260,6 +271,7 @@ export default {
       checkList: [],
 // tabs标签页
       activeName: 'first',
+      isShows: 'false',
       vehicle: [{
         id: 1,
         label: 'shly',
@@ -331,15 +343,55 @@ export default {
       }]
     }
   },
+// 方法
   methods: {
+// 是否显示电子围栏
+    isShowColumn () {
+      console.log(11)
+      this.isShows = true
+    },
+// 节点被点击时的回调
+    nodeClick (e) {
+      console.log(e.id)
+    },
+// 当复选框被点击的时候触发
+    check (e) {
+// 创建小狐狸
+// if(e.target.value == true)
+      console.log(e)
+      let pt = new window.BMap.Point(121.487, 31.249)
+      let myIcon = new window.BMap.Icon('http://lbsyun.baidu.com/jsdemo/img/fox.gif', new window.BMap.Size(200, 157))
+      this.locationMarker = new window.BMap.Marker(pt, {icon: myIcon})  // 创建标注
+      this.map.addOverlay(this.locationMarker)
+    },
+    currentChange (e) {
+      // console.log(e)
+    },
 // 地图组件
     getMap () {
-      const map = new window.BMap.Map('container-map')          // 创建地图实例
-      const point = new window.BMap.Point(116.404, 39.915)  // 创建点坐标
-      map.centerAndZoom(point, 15)                 // 初始化地图，设置中心点坐标和地图级别
-      map.enableScrollWheelZoom(true)     // 开启鼠标滚轮缩放
-      var opts = {type: window.BMAP_NAVIGATION_CONTROL_ZOOM}
-      map.addControl(new window.BMap.NavigationControl(opts))
+      this.map = new window.BMap.Map('container-map')          // 创建地图实例
+      let point = new window.BMap.Point(121.487, 31.249)  // 创建点坐标
+      // map.centerAndZoom('上海', 15)
+      this.map.centerAndZoom(point, 15)                 // 初始化地图，设置中心点坐标和地图级别
+      this.map.enableScrollWheelZoom(true)     // 开启鼠标滚轮缩放
+      let opts = {type: window.BMAP_NAVIGATION_CONTROL_ZOOM}     // 点击放大所需按钮
+      this.map.addControl(new window.BMap.NavigationControl(opts))
+// 将标注添加到地图中
+  //     var SW = new window.BMap.Point(121.487, 31.249)
+  //     var NE = new window.BMap.Point(121.587, 31.349)
+
+  //     let groundOverlayOptions = {
+  //       opacity: 1,
+  //       displayOnMinLevel: 10,
+  //       displayOnMaxLevel: 14
+  //     }
+
+  // // 初始化GroundOverlay
+  //     var groundOverlay = new window.BMap.GroundOverlay(new window.BMap.Bounds(SW, NE), groundOverlayOptions)
+
+  // // 设置GroundOverlay的图片地址
+  //     groundOverlay.setImageURL('http://lbsyun.baidu.com/jsdemo/img/si-huan.png')
+  //     this.map.addOverlay(groundOverlay)
     },
 // tabs标签页
     handleClick (tab, event) {
@@ -437,8 +489,9 @@ export default {
 .container .container-content{
 	height: 586px;
 	width: 100%;
-	background: #ECEEF2;
+	/* background: #ECEEF2; */
 	padding-left: 265px;
+	position: relative;
 	
 }
 .container #container-map{
@@ -447,6 +500,32 @@ export default {
 	margin-top:10px;
 	/* margin-left: 10px; */
 	border: 2px solid #9A9A9A;
+	
+}
+.container .enclosure{
+	position: absolute;
+	left: 73%;
+	top: 3%;
+	/* width: 100px;
+	height: 50px; */
+	background: #fff;
+
+	z-index: 999;
+}
+.container .enclosure .myMap{
+	font-size: 14px;
+	padding: 5px;
+	border: 1px solid #000;
+	cursor: pointer;
+}
+.container .isShow{
+	width: 368px;
+	height: 239px;
+	background: #fff;
+	position: absolute;
+	left: 78%;
+	top: 3%;
+	z-index: 999;
 }
 /* 右底部表单 */
 .container-footer{
@@ -469,7 +548,5 @@ export default {
 .container-footer .Monitor-from .arrow a:nth-child(1){
 	margin-right: 20px;
 }
-.el-table--border{
-	height: 190px;
-}
+
 </style>
