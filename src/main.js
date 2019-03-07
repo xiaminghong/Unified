@@ -10,7 +10,7 @@ import '@/assets/scss/index.scss'
 import httpRequest from '@/utils/httpRequest' // api: https://github.com/axios/axios
 import { isAuth } from '@/utils'
 import cloneDeep from 'lodash/cloneDeep'
-
+// import vueBaiduMap from 'vue-baidu-map'
 Vue.use(VueCookie)
 Vue.config.productionTip = false
 
@@ -34,3 +34,11 @@ new Vue({
   template: '<App/>',
   components: { App }
 })
+
+// App.use(vueBaiduMap)
+/** *******sessionStorage 存储的数据********/
+// loginData: 						登录数据，为便于存取，将loginData转化为以下几个内容，它失效所有都失效
+	// 	token: 							用于认证，直接存储到http的header里
+	// 	totalMenuList: 			所有菜单数据，用于渲染绑定视图，通过id来进行导航操作
+	// 	permissions: 				所有权限
+	// 	dynamicMenuRoutes: 	所有动态路由，id与菜单数据一致

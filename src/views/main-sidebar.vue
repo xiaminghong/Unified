@@ -6,24 +6,6 @@
         :collapse="sidebarFold"
         :collapseTransition="false"
         class="site-sidebar__menu">
-        <el-menu-item index="home" @click="$router.push({ name: 'home' })">
-          <icon-svg name="shouye" class="site-sidebar__menu-icon"></icon-svg>
-          <span slot="title">首页</span>
-        </el-menu-item>
-        <el-submenu index="demo">
-          <template slot="title">
-            <icon-svg name="shoucang" class="site-sidebar__menu-icon"></icon-svg>
-            <span>demo</span>
-          </template>
-          <el-menu-item index="demo-echarts" @click="$router.push({ name: 'demo-echarts' })">
-            <icon-svg name="tubiao" class="site-sidebar__menu-icon"></icon-svg>
-            <span slot="title">echarts</span>
-          </el-menu-item>
-          <el-menu-item index="demo-ueditor" @click="$router.push({ name: 'demo-ueditor' })">
-            <icon-svg name="editor" class="site-sidebar__menu-icon"></icon-svg>
-            <span slot="title">ueditor</span>
-          </el-menu-item>
-        </el-submenu>
         <sub-menu
           v-for="menu in menuList"
           :key="menu.menuId"
@@ -75,13 +57,44 @@
       $route: 'routeHandle'
     },
     created () {
-      this.menuList = JSON.parse(sessionStorage.getItem('menuList') || '[]')
+      this.totalMenuList = JSON.parse(sessionStorage.getItem('totalMenuList') || '[]')
       this.dynamicMenuRoutes = JSON.parse(sessionStorage.getItem('dynamicMenuRoutes') || '[]')
       this.routeHandle(this.$route)
     },
     methods: {
+      haveRouteId (menuList, menuId) {
+        var filterMenuList = menuList.filter((item) => {
+          if (item.menuId === menuId) {
+            return true
+          }else {
+            if (item.list && item.list.length > 0) {
+              return this.haveRouteId(item.list, route.meta.menuId)
+            }else {
+              return false
+            }
+          }
+        })
+        if (filterMenuList.length > 0) {
+          return true
+        }else {
+          return false
+        }
+      },
       // 路由操作
       routeHandle (route) {
+        //查找路由对应的menu
+        var menu = this.totalMenuList.filter((item) => {
+          if (item.list && item.list.length > 0) {
+            return this.haveRouteId(item.list, route.meta.menuId)
+          }
+          return false
+        })
+        console.log(menu);
+        if (menu.length > 0) {
+          this.menuList = menu[0].list
+
+          console.log(this.menuList);
+        }
         if (route.meta.isTab) {
           // tab选中, 不存在先添加
           var tab = this.mainTabs.filter(item => item.name === route.name)[0]

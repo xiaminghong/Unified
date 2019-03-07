@@ -8,17 +8,20 @@ import * as sysMenu from './modules/sys-menu'
 import * as sysRole from './modules/sys-role'
 import * as sysUser from './modules/sys-user'
 
+import * as mockData from './modules/mockData'
+
 // tips
 // 1. 开启/关闭[业务模块]拦截, 通过调用fnCreate方法[isOpen参数]设置.
 // 2. 开启/关闭[业务模块中某个请求]拦截, 通过函数返回对象中的[isOpen属性]设置.
-fnCreate(common, false)
-fnCreate(jobSchedule, false)
-fnCreate(oss, false)
-fnCreate(sysConfig, false)
-fnCreate(sysLog, false)
-fnCreate(sysMenu, false)
-fnCreate(sysRole, false)
-fnCreate(sysUser, false)
+fnCreate(common, true)
+fnCreate(jobSchedule, true)
+fnCreate(oss, true)
+fnCreate(sysConfig, true)
+fnCreate(sysLog, true)
+fnCreate(sysMenu, true)
+fnCreate(sysRole, true)
+fnCreate(sysUser, true)
+fnCreate(mockData, true)
 
 /**
  * 创建mock模拟数据

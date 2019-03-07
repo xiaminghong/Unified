@@ -66,7 +66,7 @@
         set (val) { this.$store.commit('common/updateMainTabsActiveName', val) }
       },
       siteContentViewHeight () {
-        var height = this.documentClientHeight - 50 - 30 - 2
+        var height = this.documentClientHeight - 65 - 30 - 2
         if (this.$route.meta.isTab) {
           height -= 40
           return isURL(this.$route.meta.iframeUrl) ? { height: height + 'px' } : { minHeight: height + 'px' }
@@ -95,7 +95,7 @@
           }
         } else {
           this.menuActiveName = ''
-          this.$router.push({ name: 'home' })
+          this.$router.push({ name: 'main-content-menu' })
         }
       },
       // tabs, 关闭当前
@@ -110,7 +110,7 @@
       tabsCloseAllHandle () {
         this.mainTabs = []
         this.menuActiveName = ''
-        this.$router.push({ name: 'home' })
+        this.$router.push({ name: 'main-content-menu' })
       },
       // tabs, 刷新当前
       tabsRefreshCurrentHandle () {

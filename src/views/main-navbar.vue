@@ -2,29 +2,31 @@
   <nav class="site-navbar" :class="'site-navbar--' + navbarLayoutType">
     <div class="site-navbar__header">
       <h1 class="site-navbar__brand" @click="$router.push({ name: 'home' })">
-        <a class="site-navbar__brand-lg" href="javascript:;">人人快速开发平台</a>
-        <a class="site-navbar__brand-mini" href="javascript:;">人人</a>
+        <a class="site-navbar__brand-lg" href="javascript:;"><img src="~@/assets/img/logo.png" height="40px">联茵智能监控系统</a>
+        <a class="site-navbar__brand-mini" href="javascript:;">联茵</a>
       </h1>
     </div>
     <div class="site-navbar__body clearfix">
       <el-menu
-        class="site-navbar__menu"
+        class="site-navbar__menu site-navbar__menu--top"
         mode="horizontal">
-        <el-menu-item class="site-navbar__switch" index="0" @click="sidebarFold = !sidebarFold">
-          <icon-svg name="zhedie"></icon-svg>
-        </el-menu-item>
+        <top-menu-item
+          v-for="menu in totalMenuList"
+          :key="menu.menuId"
+          :menu="menu">
+        </top-menu-item>
       </el-menu>
       <el-menu
         class="site-navbar__menu site-navbar__menu--right"
         mode="horizontal">
         <el-menu-item index="1" @click="$router.push({ name: 'theme' })">
           <template slot="title">
-            <el-badge value="new">
-              <icon-svg name="shezhi" class="el-icon-setting"></icon-svg>
-            </el-badge>
+            <!-- <el-badge value="new"> -->
+              <icon-svg name="shezhi" class="el-icon-setting"></icon-svg>设置
+            <!-- </el-badge> -->
           </template>
         </el-menu-item>
-        <el-menu-item index="2">
+<!--         <el-menu-item index="2">
           <el-badge value="hot">
             <a href="//www.renren.io/" target="_blank">官方社区</a>
           </el-badge>
@@ -34,7 +36,7 @@
           <el-menu-item index="2-1"><a href="//github.com/daxiongYang/renren-fast-vue" target="_blank">前端</a></el-menu-item>
           <el-menu-item index="2-2"><a href="//git.oschina.net/renrenio/renren-fast" target="_blank">后台</a></el-menu-item>
           <el-menu-item index="2-3"><a href="//git.oschina.net/renrenio/renren-generator" target="_blank">代码生成器</a></el-menu-item>
-        </el-submenu>
+        </el-submenu> -->
         <el-menu-item class="site-navbar__avatar" index="3">
           <el-dropdown :show-timeout="0" placement="bottom">
             <span class="el-dropdown-link">
@@ -54,16 +56,19 @@
 </template>
 
 <script>
+  import TopMenuItem from './top-menu-item'
   import UpdatePassword from './main-navbar-update-password'
   import { clearLoginInfo } from '@/utils'
   export default {
     data () {
       return {
-        updatePassowrdVisible: false
+        updatePassowrdVisible: false,
+        totalMenuList: []
       }
     },
     components: {
-      UpdatePassword
+      UpdatePassword,
+      TopMenuItem
     },
     computed: {
       navbarLayoutType: {
@@ -80,6 +85,9 @@
       userName: {
         get () { return this.$store.state.user.name }
       }
+    },
+    created () {
+      this.totalMenuList =  JSON.parse(sessionStorage.getItem('totalMenuList') || '[]')
     },
     methods: {
       // 修改密码

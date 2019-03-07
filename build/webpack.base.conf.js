@@ -24,6 +24,10 @@ module.exports = {
   entry: {
     app: ['babel-polyfill', './src/main.js']
   },
+  // 添加百度地图
+  // externals: {
+  //   'BMap': 'BMap'
+  // },
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
@@ -35,7 +39,7 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src'),
+      '@': resolve('src')
     }
   },
   module: {

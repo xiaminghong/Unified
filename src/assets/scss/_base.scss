@@ -122,9 +122,9 @@ img {
   right: 0;
   left: 0;
   z-index: 1030;
-  height: 50px;
+  height: 65px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
-  background-color: $navbar--background-color;
+  background-color: #1F3355;
 
   &--inverse {
     .site-navbar__body {
@@ -159,14 +159,14 @@ img {
     position: relative;
     float: left;
     width: 230px;
-    height: 50px;
+    height: 65px;
     overflow: hidden;
   }
   &__brand {
     display: table-cell;
     vertical-align: middle;
     width: 230px;
-    height: 50px;
+    height: 65px;
     margin: 0;
     line-height: 50px;
     font-size: 20px;
@@ -218,18 +218,14 @@ img {
     float: left;
     background-color: transparent;
     border-bottom: 0;
-
-    &--right {
-      float: right;
-    }
     a:focus,
     a:hover {
       text-decoration: none;
     }
     .el-menu-item,
     .el-submenu > .el-submenu__title {
-      height: 50px;
-      line-height: 50px;
+      height: 65px;
+      line-height: 65px;
     }
     .el-submenu > .el-menu {
       top: 55px;
@@ -241,6 +237,22 @@ img {
         line-height: 16px;
       }
     }
+    &--top {
+      background-color: rgba(43,88,143,1);
+      .el-menu-item{
+        height: 65px;
+        line-height: 32px;
+        text-align: center;
+      }
+      .icon-svg {
+        margin: 0px;
+        height: 24px;
+        width: 24px;
+      }
+    }
+    &--right {
+      float: right;
+    }
   }
 }
 
@@ -249,7 +261,7 @@ img {
 ------------------------------ */
 .site-sidebar {
   position: fixed;
-  top: 50px;
+  top: 65px;
   left: 0;
   bottom: 0;
   z-index: 1020;
@@ -311,10 +323,18 @@ img {
 
   &__wrapper {
     position: relative;
-    padding-top: 50px;
+    padding-top: 65px;
     margin-left: 230px;
     min-height: 100%;
     background: $content--background-color;
+    &--sp {
+      position: absolute;
+      top: 66px;
+      left: 0px;
+      width: 100%;
+      padding: 0px;
+      background: $content--background-color;
+    }
   }
   &--tabs {
     padding: 55px 0 0;
@@ -322,7 +342,7 @@ img {
   > .el-tabs {
     > .el-tabs__header {
       position: fixed;
-      top: 50px;
+      top: 65px;
       left: 230px;
       right: 0;
       z-index: 930;
@@ -340,7 +360,7 @@ img {
       padding: 0 15px 15px;
       > .site-tabs__tools {
         position: fixed;
-        top: 50px;
+        top: 65px;
         right: 0;
         z-index: 931;
         height: 40px;
@@ -354,5 +374,34 @@ img {
         }
       }
     }
+  }
+}
+
+/* main-content 上下布局，内容部分
+------------------------------ */
+.main-content {
+  &__wrapper {
+    position: relative;
+    height: 100%;
+  }
+  &__sidebar {
+    width: 270px;
+    height: 100%;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0px 5px 10px rgba(211, 211, 211, 0.5);
+    padding-bottom: 180px;
+  }
+  &__tree {
+    height: 100%;
+    overflow: auto;
+    border-bottom: solid 1px gray;
+    .tree-search {
+      padding: 10px;
+      border-bottom: solid 1px gray;
+    }
+  }
+  &__info {
+    height: 180px;
   }
 }
