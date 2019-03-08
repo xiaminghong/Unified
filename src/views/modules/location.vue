@@ -9,16 +9,15 @@
 				</div>
 				<!-- 树状多选框 -->
 			<el-tree
-			:data="vehicle"
+			:data="vehicles"
 			show-checkbox
 			default-expand-all
 			node-key="id"
 			ref="tree"
 			accordion
 			:props="defaultProps"
-			@node-click='nodeClick'
-			@check='check'
-			@current-change='currentChange'>
+			@check='getCheckedKeys'
+		>
 		</el-tree>
 			
 			</div>
@@ -45,7 +44,7 @@
 				</div>
 			</div>
 		</aside>
-		<!-- 地图 -->
+		<!-- 地图右容器 -->
 		<div class="container">
 			<div class="container-top">
 				<el-row type="flex" justify="end">
@@ -58,8 +57,154 @@
 						<div class="myMap">我的地图</div>
 						<div class="myMap" @click="isShowColumn">电子围栏</div>
 					</div>
-					<!-- 是否显示电子围栏 -->
-				<div class="isShow" v-show='false'></div>
+			<!-- ====================== -->
+			<!-- 是否显示添加电子围栏 -->
+			<div class='addForm' v-show="false">
+				<div class="addForm-header">添加电子围栏</div>
+				<div class='classTable'>
+					<table border="1">
+						<tr>
+							<th>名称</th>
+							<th><input type="text"></th>
+						</tr>
+						<tr>
+							<th>区域</th>
+							<th>
+								<input type="radio">自定义区域
+								<input type="radio">行政区域
+							</th>
+						</tr>
+						<tr>
+							<th>区域名称</th>
+							<th>
+								<select name="" id="">
+									<option value="包车1">包车1</option>
+									<option value="包车2">包车2</option>
+									<option value="包车3">包车3</option>
+									<option value="包车4">包车4</option>
+								</select>
+							</th>
+						</tr>
+						<tr>
+							<th>状态</th>
+							<th>
+								<select name="" id="">
+									<option value="禁入">禁出</option>
+									<option value="禁出">禁入</option>
+								</select>
+							</th>
+						</tr>
+						<tr>
+							<th>录像时长</th>
+							<th><input type="text"></th>
+						</tr>
+						<tr>
+							<th>摄像头
+								<input type="checkbox">全选
+							</th>
+							<th>
+								<input type="checkbox">摄像头
+								<input type="checkbox">摄像头
+								<input type="checkbox">摄像头
+								<input type="checkbox">摄像头
+							</th>
+						</tr>
+						<tr>
+							<th>报警语音</th>
+							<th>
+								<input type="text">
+							</th>
+						</tr>
+					</table>
+					<button>保存</button>
+					<button>关闭</button>
+				</div>
+			</div>
+		<!-- ================================== -->
+			<!-- 是否显示电子围栏 -->
+			<div  v-show="false">
+				<div class="clickHide">隐藏</div>
+				<div class="frame">
+					<!-- 搜索名称 -->
+					<el-row>
+				  <el-col :span="10"><div class="grid-content bg-purple">
+						<el-input v-model="nameText" placeholder="名称"></el-input>
+					</div></el-col>
+					<el-col :span="4"><div class="grid-content bg-purple-light">
+						<el-button  icon="el-icon-search"></el-button>
+					</div></el-col>
+					<el-col :span="8"><div class="grid-content bg-purple">
+						<el-button type="primary" plain>添加</el-button>	
+					</div></el-col>
+					<!-- 表单 -->
+					 <el-table
+						:data="addData"
+						border
+						style="height:190px width: 100%">
+						<el-table-column
+							type="selection"
+							width="45">
+						</el-table-column>
+						<el-table-column
+							prop="name"
+							label="操作"
+							width="70">
+						</el-table-column>
+						<el-table-column
+							prop="address"
+							label="序号"
+							width="50">
+						</el-table-column>
+						<el-table-column
+							prop="address"
+							label="名称"
+							width="50">
+						</el-table-column>
+						<el-table-column
+							prop="address"
+							label="所属组织"
+							width="100">
+						</el-table-column>
+						<el-table-column
+							prop="address"
+							label="类型"
+							width="50">
+						</el-table-column>
+					</el-table>
+				</el-row>
+				<!-- 每页数记录条 -->
+				<el-row>
+				<el-col :span="3"><div class="grid-content bg-purple">单页数目</div></el-col>
+				<el-col :span="3"><div class="grid-content bg-purple-light">
+					<select name="" id="">
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						</select>	
+					
+				</div></el-col>
+					<el-col :span="3"><div class="grid-content bg-purple">
+					<i class='el-icon-d-arrow-left'></i>	
+					<i class='el-icon-arrow-left'></i>	
+					</div></el-col>
+					<el-col :span="3"><div class="grid-content bg-purple-light">
+						第1页
+						</div></el-col>
+					<el-col :span="3"><div class="grid-content bg-purple">共一页</div></el-col>
+					<el-col :span="3"><div class="grid-content bg-purple-light">
+						<i class='el-icon-arrow-right'></i>	
+						<i class='el-icon-d-arrow-right'></i>	
+						
+					</div></el-col>
+					<el-col :span="3"><div class="grid-content bg-purple-light">
+						<i class='el-icon-refresh'></i>	
+						</div></el-col>
+					<el-col :span="3"><div class="grid-content bg-purple-light">没有记录</div></el-col>
+				</el-row>
+	
+				</div>
+			</div>
+
 				<!-- 主地图 -->
 				<div id="container-map">
 				</div>
@@ -72,12 +217,13 @@
 						<a><img src="../../assets/img/location/u341.png" alt=""></a>
 					</div>
 					<el-tabs v-model="activeName" @tab-click="handleClick" type='card'>
-						<el-tab-pane label="GPS监控" name="first">	 
+						<el-tab-pane label="GPS监控" name="first" >	 
 							<!-- 右下监控报警表格 -->
 							<!-- 第一个 -->
 							<el-table
 							:data="tableDataFirst"
 							border
+							
 							style="height:190px width:100%">
 							<el-table-column
 								prop="vehicle"
@@ -92,12 +238,14 @@
 							<el-table-column
 								prop="address"
 								label="位置"
-								width="250%">
+								width="200%"
+								>
 							</el-table-column>
 							<el-table-column
 								prop="speed"
 								label="速度"
-								width="100%">
+								width="100%"
+								>
 							</el-table-column>
 							<el-table-column
 								prop="police"
@@ -260,19 +408,35 @@
 export default {
   created () {
     this.map = null
-    this.locationMarker = null
+// this.locationMarker = null
+    this.point = null
+    this.marker = null
   },
   mounted () {
     this.getMap()
   },
   data () {
     return {
+      isShow: 'false',
+// 单选框
+      radio: '',
+// 搜索内容
       search: '',
       checkList: [],
-// tabs标签页
-      activeName: 'first',
-      isShows: 'false',
-      vehicle: [{
+// 添加电子围栏内容
+      labelPosition: 'right',
+      formLabelAlign: {
+        name: ''
+      },
+// 输入名称内容
+      nameText: '',
+      addData: [{
+        date: '2016',
+        name: '王小虎',
+        address: '上海市'
+      }],
+// ======================
+      vehicles: [{
         id: 1,
         label: 'shly',
         children: [{
@@ -296,6 +460,8 @@ export default {
         children: 'children',
         label: 'label'
       },
+// tabs标签页
+      activeName: 'first',
 // 右下表格数据一
       tableDataFirst: [{
         vehicle: '沪A5927',
@@ -348,50 +514,31 @@ export default {
 // 是否显示电子围栏
     isShowColumn () {
       console.log(11)
-      this.isShows = true
+      this.isShow = true
     },
-// 节点被点击时的回调
-    nodeClick (e) {
-      console.log(e.id)
-    },
-// 当复选框被点击的时候触发
-    check (e) {
-// 创建小狐狸
-// if(e.target.value == true)
-      console.log(e)
-      let pt = new window.BMap.Point(121.487, 31.249)
-      let myIcon = new window.BMap.Icon('http://lbsyun.baidu.com/jsdemo/img/fox.gif', new window.BMap.Size(200, 157))
-      this.locationMarker = new window.BMap.Marker(pt, {icon: myIcon})  // 创建标注
-      this.map.addOverlay(this.locationMarker)
-    },
-    currentChange (e) {
-      // console.log(e)
+// 获取到树数据
+    getCheckedKeys () {
+      console.log(this.$refs.tree.getCheckedKeys())
+      if (this.$refs.tree.getCheckedKeys().length !== 0) {
+        // 创建小狐狸
+        var pt = new window.BMap.Point(121.487, 31.2349)
+        var myIcon = new window.BMap.Icon('http://lbsyun.baidu.com/jsdemo/img/fox.gif', new this.BMap.Size(300, 157))
+        this.marker = new window.BMap.Marker(pt, {icon: myIcon})  // 创建标注
+        this.map.addOverlay(this.marker)
+        // console.log(111)
+      } else {
+        this.map.removeOverlay(this.marker)
+      }
     },
 // 地图组件
     getMap () {
       this.map = new window.BMap.Map('container-map')          // 创建地图实例
-      let point = new window.BMap.Point(121.487, 31.249)  // 创建点坐标
+      this.point = new window.BMap.Point(121.487, 31.2349)  // 创建点坐标
       // map.centerAndZoom('上海', 15)
-      this.map.centerAndZoom(point, 15)                 // 初始化地图，设置中心点坐标和地图级别
+      this.map.centerAndZoom(this.point, 15)                 // 初始化地图，设置中心点坐标和地图级别
       this.map.enableScrollWheelZoom(true)     // 开启鼠标滚轮缩放
       let opts = {type: window.BMAP_NAVIGATION_CONTROL_ZOOM}     // 点击放大所需按钮
       this.map.addControl(new window.BMap.NavigationControl(opts))
-// 将标注添加到地图中
-  //     var SW = new window.BMap.Point(121.487, 31.249)
-  //     var NE = new window.BMap.Point(121.587, 31.349)
-
-  //     let groundOverlayOptions = {
-  //       opacity: 1,
-  //       displayOnMinLevel: 10,
-  //       displayOnMaxLevel: 14
-  //     }
-
-  // // 初始化GroundOverlay
-  //     var groundOverlay = new window.BMap.GroundOverlay(new window.BMap.Bounds(SW, NE), groundOverlayOptions)
-
-  // // 设置GroundOverlay的图片地址
-  //     groundOverlay.setImageURL('http://lbsyun.baidu.com/jsdemo/img/si-huan.png')
-  //     this.map.addOverlay(groundOverlay)
     },
 // tabs标签页
     handleClick (tab, event) {
@@ -489,11 +636,11 @@ export default {
 .container .container-content{
 	height: 586px;
 	width: 100%;
-	/* background: #ECEEF2; */
 	padding-left: 265px;
-	position: relative;
+	/* position: relative; */
 	
 }
+
 .container #container-map{
 	height: 100%;
 	width: 100%;
@@ -504,29 +651,61 @@ export default {
 }
 .container .enclosure{
 	position: absolute;
-	left: 73%;
-	top: 3%;
+	left: 70%;
+	top: 13%;
 	/* width: 100px;
 	height: 50px; */
 	background: #fff;
 
 	z-index: 999;
 }
+/* 隐藏按钮 */
+.container .clickHide{
+	position: absolute;
+	left: 75%;
+	top: 11%;
+	border: 1px solid #000;
+	background: #199ED8;
+	z-index: 999;
+	padding: 2px 5px;
+}
 .container .enclosure .myMap{
 	font-size: 14px;
-	padding: 5px;
+	padding: 1px;
 	border: 1px solid #000;
 	cursor: pointer;
 }
-.container .isShow{
+
+/* 是否显示添加电子围栏 */
+.container .addForm{
+	width: 388px;
+	height: 435px;
+	background: #fff;
+	position: absolute;
+	left: 36%;
+	top: 15%;
+	z-index: 999;
+	border-radius: 20px;
+	border: 1px solid #000;
+}
+.container .frame{
 	width: 368px;
 	height: 239px;
 	background: #fff;
 	position: absolute;
-	left: 78%;
-	top: 3%;
+	left: 75%;
+	top: 15%;
 	z-index: 999;
 }
+.container .addForm .addForm-header{
+	height: 40px;
+	line-height: 40px;
+	width: 100%;
+	text-align: center;
+	background: #52A4DB;
+	border-radius: 20px 20px 0 0;
+}
+
 /* 右底部表单 */
 .container-footer{
 	padding-left: 265px;
@@ -547,6 +726,51 @@ export default {
 }
 .container-footer .Monitor-from .arrow a:nth-child(1){
 	margin-right: 20px;
+}
+.el-table--border{
+	height: 180px;
+}
+.clickHide{
+	cursor: pointer;
+}
+
+/* 添加电子围栏框 */
+.classTable{
+	padding: 15px;
+}
+.classTable table{
+	border: 1px solid #000;
+	width: 100%;
+	height: 100%;
+	border-collapse:collapse;
+}
+.classTable button{
+	padding: 2px 20px;
+	margin-left: 60px;
+	margin-top: 20px;
+}
+
+.classTable table tr{
+	height: 30px;
+}
+.classTable table tr th:nth-child(odd){
+	width: 100px;
+	text-align: right;
+	padding-right: 10px;
+}
+.classTable table tr th:nth-child(even){
+	padding-left: 10px;
+	text-align: left;
+}
+.classTable table tr:nth-child(6){
+	height: 100px;
+}
+.classTable table tr:nth-child(7){
+	height: 60px;
+}
+.classTable table tr:nth-child(7) input{
+	height: 40px;
+	width: 200px;
 }
 
 </style>
